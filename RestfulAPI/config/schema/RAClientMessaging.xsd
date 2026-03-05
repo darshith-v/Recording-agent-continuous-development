@@ -1,0 +1,457 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- 	*************** custom XSD data types (simple types) **************************** -->
+	<xs:simpleType name="RACameraNameString">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+			<xs:pattern value="([0-9A-Fa-f_])*.{1,12}"/>			
+		</xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="RALocoIDString">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+			<xs:pattern value="([0-9A-Fa-f_])*.{1,10}"/>			
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="RACameraResolution">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="3"/>								
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="RACameraCompression">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="3"/>								
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="RACameraFrameRate">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="3"/>								
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="RAMACAddress">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+			<xs:pattern value="[0-9A-Fa-f]{0,12}"/>			
+		</xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="RACameraURL">
+		<xs:restriction base="xs:anyURI">
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="AgeType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="999999"/>								
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="VideoChunkType">
+		<xs:restriction base="xs:integer">
+			<xs:whiteSpace value="collapse"/>
+			<xs:minInclusive value="15"/>
+			<xs:maxInclusive value="600"/>								
+		</xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="RAStorageDeviceType">
+	  <xs:restriction base="xs:string">
+		<xs:whiteSpace value="collapse"/>
+		<xs:enumeration value="CHM"/>
+		<xs:enumeration value="SSD"/>
+	  </xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="RAAdjustValue">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="01"/>
+			<xs:maxInclusive value="05"/>								
+		</xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="RATimeOffsetType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-999999999"/>
+			<xs:maxInclusive value="999999999"/>								
+		</xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="RACameraMountType">
+	  <xs:restriction base="xs:string">
+		<xs:whiteSpace value="collapse"/>
+		<xs:enumeration value="0"/>		<!-- None -->
+		<xs:enumeration value="1"/>		<!-- Wall -->
+		<xs:enumeration value="2"/>		<!-- Ceiling -->
+	  </xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="RACameraRecordingStatus">
+	  <xs:restriction base="xs:string">
+		<xs:whiteSpace value="collapse"/>
+		<xs:enumeration value="R"/>		<!-- Recording -->
+		<xs:enumeration value="P"/>		<!-- Paused -->
+		<xs:enumeration value="O"/>		<!-- Off-line -->
+	  </xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="RAPlaybackUpdateType">
+	  <xs:restriction base="xs:string">
+		<xs:whiteSpace value="collapse"/>
+		<xs:enumeration value="play_rate_change"/>		
+		<xs:enumeration value="pause"/>		
+		<xs:enumeration value="reposition"/>		
+	  </xs:restriction>
+	</xs:simpleType>	
+	
+<!-- 	*************** custom XSD elements (complex types) **************************** -->
+
+    <xs:element name="recorder">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serial_number" type="xs:string" />
+                <xs:element name="loco_id" type="RALocoIDString" />
+                <xs:element name="video_storage">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="staging_base_dir" type="xs:string" />
+                            <xs:element name="video_chunk_duration" type="VideoChunkType" />
+                            <xs:element name="chm_video_base_dir" type="xs:string" />
+                            <xs:element name="rssd_video_base_dir" type="xs:string" />
+                            <xs:element name="max_age_48hr" type="xs:boolean" minOccurs="0" /> 
+							<xs:element name="max_age" type="AgeType" minOccurs="0" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="camera" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:choice maxOccurs="unbounded">
+                                <xs:element name="name" type="RACameraNameString" />
+                                <xs:element name="auto_record_to_chm" type="xs:boolean" />
+                                <xs:element name="auto_record_to_rssd" type="xs:boolean" />
+                                <xs:element name="resolution" type="RACameraResolution" />
+                                <xs:element name="compression" type="RACameraCompression" />
+                                <xs:element name="frame_rate" type="RACameraFrameRate" />
+                                <xs:element name="record_audio" type="xs:boolean" />
+                                <xs:element name="mount_type" type="RACameraMountType" />
+                                <xs:element name="serial" type="RAMACAddress" minOccurs="0" />
+                                <xs:element name="home_page" type="RACameraURL" minOccurs="0" />
+                                <xs:element name="mjpeg_url" type="RACameraURL" minOccurs="0" />
+                                <xs:element name="snapshot_url" type="RACameraURL" minOccurs="0" />
+                                <xs:element name="stream_url" type="RACameraURL" minOccurs="0" />
+                                <xs:element name="http_stream_url" type="RACameraURL" minOccurs="0" />
+                            </xs:choice>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+	<xs:element name="discovered_cameras">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="onvif_camera" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="vendor" type="xs:string" />
+							<xs:element name="model" type="xs:string" />
+							<xs:element name="serial" type="RAMACAddress" />
+							<xs:element name="home_page" type="RACameraURL" />		
+							<xs:element name="device_capabilities" type="RACameraURL" />		
+							<xs:element name="media_capabilities" type="RACameraURL" />		
+							<xs:element name="stream_url" type="RACameraURL" />		
+							<xs:element name="http_stream_url" type="RACameraURL" />		
+							<xs:element name="snapshot_url" type="RACameraURL" />					
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+    <xs:element name="new_assignments" >
+        <xs:complexType>
+            <xs:sequence>
+				<xs:element name="camera" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name" type="RACameraNameString" />
+							<xs:element name="serial" type="RAMACAddress" minOccurs="1" />
+							<xs:element name="mount_type" type="RACameraMountType" minOccurs="1" />
+							<xs:element name="home_page" type="RACameraURL" minOccurs="0" />
+							<xs:element name="mjpeg_url" type="RACameraURL" minOccurs="0" />
+							<xs:element name="snapshot_url" type="RACameraURL" minOccurs="0" />
+							<xs:element name="stream_url" type="RACameraURL" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+    <xs:element name="camera_attributes" >
+        <xs:complexType>
+            <xs:sequence>
+				<xs:element name="supported_camera" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="vendor" type="xs:string" />
+							<xs:element name="model" type="xs:string" />
+							<xs:element name="attributes">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="resolution" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="value" type="xs:string" minOccurs="1" maxOccurs="4" />
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="compression" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="value" type="xs:string" minOccurs="1" maxOccurs="4" />
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="framerate" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="value" type="xs:string" minOccurs="1" maxOccurs="4" />
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="gps_request">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="device" type="RAStorageDeviceType" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="start_time" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="end_time" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="gps">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="time" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="longitude" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="latitude" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="speed" type="xs:string" minOccurs="0" maxOccurs="1"/>				
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="gps_list">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="gps" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="parameters">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="name" type="RACameraNameString" />
+    			<xs:element name="include_adjustments"  type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="video_segments">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="start_time" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="end_time" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="segments">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="name" type="RACameraNameString" />			
+                <xs:element name="location_name" type="RAStorageDeviceType" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="video_segments" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="recordings_list">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="segments" minOccurs="0" maxOccurs="unbounded"/>		
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="time_change">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="time" type="xs:string" />
+                <xs:element name="adjustment" type="RAAdjustValue" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="time_change_list">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="time_change" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="status">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="name" type="RACameraNameString" />
+    			<xs:element name="recording_status" type="RACameraRecordingStatus" />
+                <xs:element name="segments" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="time_adjustments" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="play_video">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="requested" type="xs:boolean" />
+    			<xs:element name="camera_name" type="RACameraNameString" />
+    			<xs:element name="storage" type="RAStorageDeviceType" />
+    			<xs:element name="listevents" type="xs:boolean" />
+                <xs:element name="start_time" type="xs:string" />
+                <xs:element name="end_time" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="event">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="time" type="xs:string" />
+    			<xs:element name="event_name" type="xs:string" />
+    			<xs:element name="event_value" type="xs:boolean" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+	<xs:element name="video_events" >
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="event" minOccurs="1" maxOccurs="3" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+    <xs:element name="video_stream">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="session_id" type="xs:boolean" />
+    			<xs:element name="stream_url" type="RACameraURL" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="system_time">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="time" type="xs:string" />
+    			<xs:element name="time_offset" type="RATimeOffsetType" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="download">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="name" type="RACameraNameString" />			
+                <xs:element name="device" type="RAStorageDeviceType" />				
+                <xs:element name="start_time" type="xs:string" />
+                <xs:element name="end_time" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="credentials">
+        <xs:complexType>
+            <xs:sequence>
+    			<xs:element name="username" type="xs:string" />			
+                <xs:element name="password" type="xs:string" />				
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>	
+
+	<xs:element name="camera_list" >
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="camera_recording_status" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name" type="RACameraNameString" />								
+							<xs:element name="chm_status" type="RACameraRecordingStatus" />
+							<xs:element name="rssd_status" type="RACameraRecordingStatus" />						
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+    <xs:element name="recording_agent">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="loco_id" type="RALocoIDString" />		
+                <xs:element name="serial_number" type="xs:string" />
+                <xs:element name="server_version" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>	
+
+    <xs:element name="playback_request">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="session_id" type="xs:integer" />	
+				<xs:element name="name" type="RACameraNameString" />	
+                <xs:element name="device" type="RAStorageDeviceType" />				
+                <xs:element name="start_time" type="xs:string" />
+                <xs:element name="end_time" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>	
+
+    <xs:element name="update_video">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="session_id" type="xs:integer" />	
+                <xs:element name="update_type" type="RAPlaybackUpdateType" />		
+                <xs:element name="value" type="xs:integer" minOccurs="0" maxOccurs="1" />	
+                <xs:element name="time" type="xs:string" minOccurs="0" maxOccurs="1" />			
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>	
+
+</xs:schema>
+

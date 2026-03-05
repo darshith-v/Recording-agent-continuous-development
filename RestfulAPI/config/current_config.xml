@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<recorder>
+ <serial_number>1153721</serial_number>
+
+ <loco_id>BNSF_12345</loco_id>
+ <video_storage>
+    <staging_base_dir>/mnt/chmSSD/video/staging</staging_base_dir>
+    <video_chunk_duration>120</video_chunk_duration>
+    <chm_video_base_dir>/mnt/chmSSD/video/VideoFootages</chm_video_base_dir>
+    <rssd_video_base_dir>/mnt/removableSSD/video/VideoFootages</rssd_video_base_dir>
+    <max_age>999999</max_age>
+ </video_storage>
+ <camera>
+   <name>FORWARD</name>
+   <camera_essential>1</camera_essential>
+   <camera_max_recording_age>0</camera_max_recording_age>
+   <auto_record_to_chm>0</auto_record_to_chm>
+   <auto_record_to_rssd>0</auto_record_to_rssd>
+   <resolution>2</resolution>
+   <compression>2</compression>
+   <frame_rate>3</frame_rate>
+   <record_audio>1</record_audio>
+   <mount_type>0</mount_type>
+ </camera>
+ <camera>
+  <name>INWARD</name> 
+   <camera_essential>1</camera_essential>
+   <camera_max_recording_age>0</camera_max_recording_age>
+   <auto_record_to_chm>0</auto_record_to_chm>
+   <auto_record_to_rssd>0</auto_record_to_rssd>
+   <resolution>2</resolution>
+   <compression>2</compression>
+   <frame_rate>1</frame_rate>
+   <record_audio>0</record_audio>
+   <mount_type>0</mount_type>
+ </camera>
+  
+</recorder>

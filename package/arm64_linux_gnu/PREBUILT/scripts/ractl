@@ -1,0 +1,37 @@
+#!/bin/bash
+RDEEPROM=/opt/reagent/bin/rdeeprom
+getsn()
+{
+   RECORDER_SN=`$RDEEPROM -s 2>/dev/null`
+   if [ "$RECORDER_SN" == "serial" ] ; then
+      RECORDER_SN=
+   fi
+   ##export RECORDER_SN
+   echo "RECORDER_SN="$RECORDER_SN
+}
+ptcr()
+{
+/opt/reagent/bin/ptc_router key=1234ABCD >/dev/null 2>/dev/null &
+sleep 1 
+}
+
+
+clean_up()
+{
+        killall -g -9 reagent > /dev/null 2>&1
+        killall -g -9 rtsprec  > /dev/null 2>&1
+        killall -g -9 metarec > /dev/null 2>&1
+        killall -g -9 space_monitor > /dev/null 2>&1
+        killall -g -9 rtspplay > /dev/null 2>&1
+        killall -g -9 ptc_router > /dev/null 2>&1
+	sleep 2
+}
+
+case $1 in
+        [Ss]tart) clean_up; ptcr ; su -c "LD_LIBRARY_PATH=/opt/reagent/lib $(getsn) /opt/reagent/bin/reagent /opt/reagent/config/current_config.xml &" ;;
+        [Rr]estart) clean_up; ptcr ; su -c "LD_LIBRARY_PATH=/opt/reagent/lib $(getsn) /opt/reagent/bin/reagent /opt/reagent/config/current_config.xml &" ;;
+        [Ss]top) clean_up;;
+        *) echo "Provide start/stop/restart/version as argument";;
+esac
+
+exit 0

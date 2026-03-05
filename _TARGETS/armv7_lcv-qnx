@@ -1,0 +1,7 @@
+CROSS_PFX=ntoarmv7-
+CROSS_SFX=\.exe
+CROSS_TOOLCHAIN_BASE=/mnt/c/QNX650/host/win32/x86/usr/bin
+QNX_HOST=/mnt/c/QNX650/host/win32/x86
+QNX_TARGET=/mnt/c/QNX650/target/qnx6
+QCC_CONF_PATH=C:/QNX650/host/win32/x86/etc/qcc/gcc
+CROSS_XTRA_PATH=/mnt/c/QNX650/host/win32/x86/bin:/mnt/c/QNX650/host/win32/x86/usr/sbin:/mnt/c/QNX650/host/win32/x86/sbin

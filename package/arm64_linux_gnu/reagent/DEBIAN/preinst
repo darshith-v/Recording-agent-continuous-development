@@ -1,0 +1,64 @@
+#!/bin/bash
+set -e
+
+USER="reagent"
+RA_UID=5555
+RA_GID=5555
+set +e
+GEXISTS=$( cat /etc/group | sed -e 's/:.*//g' | grep $USER  )
+UEXISTS=$( cat /etc/passwd  | sed -e 's/:.*//g'| grep $USER )
+set -e
+
+if [ "$GEXISTS" != "$USER" ]; then
+    echo "Creating $USER Group"
+if [ ! -z "$(mount |grep overlay)" ] ; then
+        /usr/sbin/overlayroot-chroot <<EOF >/dev/null 2>/dev/null
+   groupadd -g $RA_GID $USER || true
+EOF
+fi
+   groupadd -g $RA_GID $USER || true
+else
+    echo "Modifying $USER Group"
+if [ ! -z "$(mount |grep overlay)" ] ; then
+        /usr/sbin/overlayroot-chroot <<EOF >/dev/null 2>/dev/null
+   groupmod -g $RA_GID $USER || true
+EOF
+fi
+   groupmod -g $RA_GID $USER || true
+fi
+
+if [ "$UEXISTS" != "$USER" ]; then
+    echo "Creating $USER User"
+if [ ! -z "$(mount |grep overlay)" ] ; then
+        /usr/sbin/overlayroot-chroot <<EOF >/dev/null 2>/dev/null
+  useradd -u $RA_UID -g $RA_GID -G adm,i2c -m $USER -d /home/$USER || true
+  chown -R $USER:$USER /home/$USER || true
+EOF
+fi
+  useradd -u $RA_UID -g $RA_GID -G adm,i2c -m $USER -d /home/$USER || true
+  chown -R $USER:$USER /home/$USER || true
+else
+    echo "Modifying $USER User"
+if [ ! -z "$(mount |grep overlay)" ] ; then
+        /usr/sbin/overlayroot-chroot <<EOF >/dev/null 2>/dev/null
+  usermod -u $RA_UID -g $RA_GID -G adm,i2c -m $USER -d /home/$USER || true
+  chown -R $USER:$USER /home/$USER || true
+EOF
+fi
+  usermod -u $RA_UID -g $RA_GID -G adm,i2c -m $USER -d /home/$USER || true
+  chown -R $USER:$USER /home/$USER || true
+fi
+
+if mountpoint /mnt/chmSSD/video >/dev/null 2>/dev/null ; then
+mkdir -p /mnt/chmSSD/video/VideoFootages
+CHMR="/mnt/chmSSD/video/VideoFootages"
+chmod a+rwx $CHMR 2>/dev/null || true
+rm -rf /mnt/chmSSD/video/VideoFootages/* 2>/dev/null || true
+fi
+
+if mountpoint /mnt/removableSSD/video >/dev/null 2>/dev/null ; then
+mkdir -p /mnt/removableSSD/video/VideoFootages
+CHMR="/mnt/removableSSD/video/VideoFootages"
+chmod a+rwx $CHMR 2>/dev/null || true
+rm -rf /mnt/removableSSD/video/VideoFootages/* 2>/dev/null || true
+fi

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+echo "Configuring ReAgent drop-in  Users and Services..."
+chown -R reagent:reagent /opt/reagent
+if [ "$1" = upgrade ]; then
+	echo "ReAgent drop-in upgrade completed..."
+else
+	echo "ReAgent drop-in installation completed..."
+fi
+ln -sf /var/log/syslog /opt/reagent/site/racc/log || true
+chown reagent:reagent /mnt/chmSSD/video 2>/dev/null || true
+chown reagent:reagent /mnt/chmSSD/video/VideoFootages 2>/dev/null || true
+chown reagent:reagent /mnt/removableSSD/video 2>/dev/null || true
+chown reagent:reagent /mnt/removableSSD/video/VideoFootages 2>/dev/null || true

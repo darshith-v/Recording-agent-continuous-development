@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+BASEDIR="/opt/reagent"
+if [ "$1" = remove ]; then
+	echo "----------------------------------------------------------------"
+	echo "Stopping reagent drop-in Services."
+	echo "----------------------------------------------------------------"
+	set +e
+   if [ -f "$BASEDIR/startapilistener" ] ; then
+	$BASEDIR/startapilistener stop || true
+   fi
+	set -e
+fi

@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+BASEDIR="/opt/reagent"
+REMOVE_DATA="N"
+if [ "$1" = purge ]; then
+	echo "----------------------------------------------------------------"
+	echo "Cleaning ReAgent and its user ..."
+	echo "----------------------------------------------------------------"
+	REMOVE_DATA="N"
+	USER="reagent"
+if [ ! -z "$(mount |grep overlay)" ] ; then
+   /usr/sbin/overlayroot-chroot >/dev/null 2>/dev/null <<EOF
+	userdel -r $USER >/dev/null 2>/dev/null || true
+	groupdel $USER >/dev/null 2>/dev/null || true
+EOF
+fi
+
+userdel -r $USER >/dev/null 2>/dev/null || true
+groupdel $USER >/dev/null 2>/dev/null || true
+fi
+#
+if [ $REMOVE_DATA = "Y" ]; then
+	echo "Removing all recorded  videos and related data..."
+	rm -rf /mnt/chmSSD/video/VideoFootages/*
+	rm -rf /mnt/removableSSD/video/VideoFootages/*
+fi
+
+rm -rf $BASEDIR
+
+if [ "$1" = remove ] || [ "$1" = purge ]; then
+	echo "ReAgent "$1"d successfully."
+fi

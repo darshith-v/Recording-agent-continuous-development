@@ -1,0 +1,9 @@
+Package: ReAgent
+Priority: optional
+Section: VideoSelect
+Installed-Size: 10M
+Maintainer: Wabtec Railway Electronic
+Architecture: arm64
+Version: 01.00.00.11.arm64
+Description: ReAgent drop-in Installer
+	WRE LDRS-V/LNVR video recording application.
